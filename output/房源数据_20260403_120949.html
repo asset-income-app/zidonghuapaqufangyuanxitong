@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三亚房源数据报告</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 20px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-card h3 {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .stat-card p {
+            margin: 10px 0 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .price-low {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .price-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .price-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 三亚房源数据报告</h1>
+
+        <h2>📊 数据统计</h2>
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <h3>总房源数</h3>
+                <p>29</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>平均总价</h3>
+                <p>142.73793103448276万</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>平均面积</h3>
+                <p>72.24137931034483㎡</p>
+            </div>
+        </div>
+        <h2>📋 房源列表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>区域</th>
+                    <th>小区</th>
+                    <th>户型</th>
+                    <th>面积</th>
+                    <th>总价(万)</th>
+                    <th>单价</th>
+                    <th>楼层</th>
+                    <th>来源</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="https://example.com/house/850040" target="_blank">天涯小镇 2室1厅 57平米</a></td>
+                    <td>天涯区</td>
+                    <td>天涯小镇</td>
+                    <td>2室1厅</td>
+                    <td>57</td>
+                    <td class="price-low">88.1</td>
+                    <td>15452元/平米</td>
+                    <td>8层/高层</td>
+                    <td>安居客</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/321397" target="_blank">马岭社区 3室2厅 64平米</a></td>
+                    <td>天涯区</td>
+                    <td>马岭社区</td>
+                    <td>3室2厅</td>
+                    <td>64</td>
+                    <td class="price-low">96.2</td>
+                    <td>15037元/平米</td>
+                    <td>15层/中层</td>
+                    <td>58同城</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/878294" target="_blank">海棠湾一号 4室2厅 56平米</a></td>
+                    <td>吉阳区</td>
+                    <td>海棠湾一号</td>
+                    <td>4室2厅</td>
+                    <td>56</td>
+                    <td class="price-low">99.6</td>
+                    <td>17792元/平米</td>
+                    <td>12层/中层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/279121" target="_blank">天涯小镇 3室1厅 61平米</a></td>
+                    <td>天涯区</td>
+                    <td>天涯小镇</td>
+                    <td>3室1厅</td>
+                    <td>61</td>
+                    <td class="price-medium">100.6</td>
+                    <td>16486元/平米</td>
+                    <td>29层/中层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/391607" target="_blank">马岭社区 3室1厅 54平米</a></td>
+                    <td>天涯区</td>
+                    <td>马岭社区</td>
+                    <td>3室1厅</td>
+                    <td>54</td>
+                    <td class="price-medium">114.5</td>
+                    <td>21210元/平米</td>
+                    <td>1层/高层</td>
+                    <td>安居客</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/495342" target="_blank">三亚湾红树林 2室1厅 59平米</a></td>
+                    <td>吉阳区</td>
+                    <td>三亚湾红树林</td>
+                    <td>2室1厅</td>
+                    <td>59</td>
+                    <td class="price-medium">117.0</td>
+                    <td>19831元/平米</td>
+                    <td>2层/中层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/361778" target="_blank">三亚国际免税城 3室2厅 63平米</a></td>
+                    <td>吉阳区</td>
+                    <td>三亚国际免税城</td>
+                    <td>3室2厅</td>
+                    <td>63</td>
+                    <td class="price-medium">117.0</td>
+                    <td>18575元/平米</td>
+                    <td>29层/中层</td>
+                    <td>58同城</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/842589" target="_blank">吉阳小区 1室1厅 78平米</a></td>
+                    <td>吉阳区</td>
+                    <td>吉阳小区</td>
+                    <td>1室1厅</td>
+                    <td>78</td>
+                    <td class="price-medium">117.6</td>
+                    <td>15076元/平米</td>
+                    <td>3层/高层</td>
+                    <td>安居客</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/521984" target="_blank">三亚湾花园 3室1厅 51平米</a></td>
+                    <td>天涯区</td>
+                    <td>三亚湾花园</td>
+                    <td>3室1厅</td>
+                    <td>51</td>
+                    <td class="price-medium">121.3</td>
+                    <td>23783元/平米</td>
+                    <td>18层/高层</td>
+                    <td>58同城</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/761726" target="_blank">三亚湾花园 1室1厅 68平米</a></td>
+                    <td>天涯区</td>
+                    <td>三亚湾花园</td>
+                    <td>1室1厅</td>
+                    <td>68</td>
+                    <td class="price-medium">123.8</td>
+                    <td>18202元/平米</td>
+                    <td>17层/中层</td>
+                    <td>链家</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/942345" target="_blank">西岛渔村 4室2厅 79平米</a></td>
+                    <td>天涯区</td>
+                    <td>西岛渔村</td>
+                    <td>4室2厅</td>
+                    <td>79</td>
+                    <td class="price-medium">124.6</td>
+                    <td>15767元/平米</td>
+                    <td>28层/低层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/302851" target="_blank">吉阳小区 2室1厅 56平米</a></td>
+                    <td>吉阳区</td>
+                    <td>吉阳小区</td>
+                    <td>2室1厅</td>
+                    <td>56</td>
+                    <td class="price-medium">126.1</td>
+                    <td>22518元/平米</td>
+                    <td>26层/高层</td>
+                    <td>链家</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/399890" target="_blank">吉阳小区 4室2厅 73平米</a></td>
+                    <td>吉阳区</td>
+                    <td>吉阳小区</td>
+                    <td>4室2厅</td>
+                    <td>73</td>
+                    <td class="price-medium">127.6</td>
+                    <td>17478元/平米</td>
+                    <td>10层/中层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/972517" target="_blank">三亚湾花园 3室1厅 64平米</a></td>
+                    <td>天涯区</td>
+                    <td>三亚湾花园</td>
+                    <td>3室1厅</td>
+                    <td>64</td>
+                    <td class="price-medium">136.3</td>
+                    <td>21302元/平米</td>
+                    <td>2层/高层</td>
+                    <td>链家</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/312040" target="_blank">三亚国际免税城 2室2厅 60平米</a></td>
+                    <td>吉阳区</td>
+                    <td>三亚国际免税城</td>
+                    <td>2室2厅</td>
+                    <td>60</td>
+                    <td class="price-medium">137.7</td>
+                    <td>22949元/平米</td>
+                    <td>15层/低层</td>
+                    <td>58同城</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/680744" target="_blank">天涯小镇 2室1厅 62平米</a></td>
+                    <td>天涯区</td>
+                    <td>天涯小镇</td>
+                    <td>2室1厅</td>
+                    <td>62</td>
+                    <td class="price-medium">140.9</td>
+                    <td>22721元/平米</td>
+                    <td>21层/高层</td>
+                    <td>链家</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/580944" target="_blank">西岛渔村 2室1厅 76平米</a></td>
+                    <td>天涯区</td>
+                    <td>西岛渔村</td>
+                    <td>2室1厅</td>
+                    <td>76</td>
+                    <td class="price-medium">142.2</td>
+                    <td>18710元/平米</td>
+                    <td>18层/中层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/898681" target="_blank">吉阳小区 3室1厅 71平米</a></td>
+                    <td>吉阳区</td>
+                    <td>吉阳小区</td>
+                    <td>3室1厅</td>
+                    <td>71</td>
+                    <td class="price-medium">146.9</td>
+                    <td>20694元/平米</td>
+                    <td>2层/中层</td>
+                    <td>58同城</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/457068" target="_blank">亚龙湾公主郡 2室1厅 54平米</a></td>
+                    <td>吉阳区</td>
+                    <td>亚龙湾公主郡</td>
+                    <td>2室1厅</td>
+                    <td>54</td>
+                    <td class="price-medium">148.5</td>
+                    <td>27507元/平米</td>
+                    <td>12层/高层</td>
+                    <td>链家</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/373959" target="_blank">天涯小镇 2室1厅 105平米</a></td>
+                    <td>天涯区</td>
+                    <td>天涯小镇</td>
+                    <td>2室1厅</td>
+                    <td>105</td>
+                    <td class="price-high">163.6</td>
+                    <td>15578元/平米</td>
+                    <td>28层/中层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/677941" target="_blank">亚龙湾公主郡 2室2厅 106平米</a></td>
+                    <td>吉阳区</td>
+                    <td>亚龙湾公主郡</td>
+                    <td>2室2厅</td>
+                    <td>106</td>
+                    <td class="price-high">163.9</td>
+                    <td>15465元/平米</td>
+                    <td>27层/中层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/247823" target="_blank">亚龙湾公主郡 3室1厅 101平米</a></td>
+                    <td>吉阳区</td>
+                    <td>亚龙湾公主郡</td>
+                    <td>3室1厅</td>
+                    <td>101</td>
+                    <td class="price-high">174.1</td>
+                    <td>17240元/平米</td>
+                    <td>10层/高层</td>
+                    <td>安居客</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/578366" target="_blank">西岛渔村 3室2厅 84平米</a></td>
+                    <td>天涯区</td>
+                    <td>西岛渔村</td>
+                    <td>3室2厅</td>
+                    <td>84</td>
+                    <td class="price-high">176.5</td>
+                    <td>21017元/平米</td>
+                    <td>12层/低层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/715542" target="_blank">西岛渔村 1室1厅 52平米</a></td>
+                    <td>天涯区</td>
+                    <td>西岛渔村</td>
+                    <td>1室1厅</td>
+                    <td>52</td>
+                    <td class="price-high">181.1</td>
+                    <td>34827元/平米</td>
+                    <td>16层/低层</td>
+                    <td>安居客</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/747666" target="_blank">马岭社区 3室2厅 99平米</a></td>
+                    <td>天涯区</td>
+                    <td>马岭社区</td>
+                    <td>3室2厅</td>
+                    <td>99</td>
+                    <td class="price-high">185.8</td>
+                    <td>18772元/平米</td>
+                    <td>25层/高层</td>
+                    <td>贝壳</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/874026" target="_blank">马岭社区 4室2厅 65平米</a></td>
+                    <td>天涯区</td>
+                    <td>马岭社区</td>
+                    <td>4室2厅</td>
+                    <td>65</td>
+                    <td class="price-high">187.1</td>
+                    <td>28785元/平米</td>
+                    <td>16层/中层</td>
+                    <td>58同城</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/483323" target="_blank">海棠湾一号 2室1厅 99平米</a></td>
+                    <td>吉阳区</td>
+                    <td>海棠湾一号</td>
+                    <td>2室1厅</td>
+                    <td>99</td>
+                    <td class="price-high">188.7</td>
+                    <td>19065元/平米</td>
+                    <td>1层/高层</td>
+                    <td>链家</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/738578" target="_blank">吉阳小区 2室2厅 81平米</a></td>
+                    <td>吉阳区</td>
+                    <td>吉阳小区</td>
+                    <td>2室2厅</td>
+                    <td>81</td>
+                    <td class="price-high">193.4</td>
+                    <td>23872元/平米</td>
+                    <td>21层/高层</td>
+                    <td>链家</td>
+                </tr>
+                <tr>
+                    <td><a href="https://example.com/house/472587" target="_blank">三亚湾红树林 1室1厅 97平米</a></td>
+                    <td>吉阳区</td>
+                    <td>三亚湾红树林</td>
+                    <td>1室1厅</td>
+                    <td>97</td>
+                    <td class="price-high">198.7</td>
+                    <td>20482元/平米</td>
+                    <td>10层/中层</td>
+                    <td>58同城</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>数据来源：链家网、安居客、58同城、贝壳找房 | 自动生成时间：2026-04-03 12:09:50</p>
+        </div>
+    </div>
+</body>
+</html>

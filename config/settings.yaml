@@ -1,0 +1,49 @@
+city: "三亚"
+districts:
+  - "吉阳区"
+  - "天涯区"
+
+price_range:
+  min: 0
+  max: 2000000
+
+house_types:
+  - "二手房"
+  - "新房"
+
+websites:
+  lianjia:
+    enabled: true
+    name: "链家网"
+    base_url: "https://sanya.lianjia.com"
+  anjuke:
+    enabled: true
+    name: "安居客"
+    base_url: "https://sanya.anjuke.com"
+  wuba:
+    enabled: true
+    name: "58同城"
+    base_url: "https://sanya.58.com"
+  beike:
+    enabled: true
+    name: "贝壳找房"
+    base_url: "https://sy.ke.com"
+
+export_formats:
+  - "excel"
+  - "csv"
+  - "pdf"
+  - "html"
+
+output:
+  directory: "output"
+  filename_prefix: "三亚房源"
+
+crawl_settings:
+  max_pages: 50
+  delay: 2
+  timeout: 30
+  retry_times: 3
+  concurrent_requests: 5
+
+user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"

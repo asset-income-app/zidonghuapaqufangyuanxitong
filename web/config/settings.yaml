@@ -1,0 +1,25 @@
+city: 三亚
+crawl_settings:
+  delay: 2
+  max_pages: 50
+  retry_times: 3
+  timeout: 30
+districts:
+- 吉阳区
+- 天涯区
+price_range:
+  max: 20000
+  min: 10000
+websites:
+  anjuke:
+    enabled: true
+    name: 安居客
+  beike:
+    enabled: true
+    name: 贝壳找房
+  lianjia:
+    enabled: true
+    name: 链家网
+  wuba:
+    enabled: true
+    name: 58同城

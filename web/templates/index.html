@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三亚房源智能爬取系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stats-card .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .stats-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        .stats-card .label {
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .progress {
+            height: 30px;
+            border-radius: 15px;
+            background-color: #ecf0f1;
+        }
+
+        .progress-bar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            line-height: 30px;
+            font-weight: 600;
+        }
+
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .status-running {
+            background-color: var(--secondary-color);
+            animation: pulse 2s infinite;
+        }
+
+        .status-idle {
+            background-color: #95a5a6;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .file-item {
+            padding: 15px;
+            border: 1px solid #ecf0f1;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background-color: #f8f9fa;
+            border-color: var(--primary-color);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .nav-tabs {
+            border: none;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 10px 10px 0 0;
+            color: var(--dark-color);
+            font-weight: 500;
+            padding: 15px 25px;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .config-form label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .config-form input, .config-form select {
+            border-radius: 10px;
+            border: 2px solid #ecf0f1;
+            padding: 10px 15px;
+        }
+
+        .config-form input:focus, .config-form select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="text-white mb-2">
+                <i class="fas fa-home"></i> 三亚房源智能爬取系统
+            </h1>
+            <p class="text-white-50">全自动化房源数据爬取、分析、可视化平台</p>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="icon text-primary">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="value" id="totalHouses">0</div>
+                    <div class="label">总房源数</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="icon text-success">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="value" id="avgPrice">0万</div>
+                    <div class="label">平均价格</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="icon text-warning">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <div class="value" id="avgArea">0㎡</div>
+                    <div class="label">平均面积</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="icon text-info">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="value" id="elapsedTime">0秒</div>
+                    <div class="label">运行时间</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-cogs"></i> 控制面板</h5>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-3" id="mainTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#crawler">
+                            <i class="fas fa-spider"></i> 爬虫控制
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#config">
+                            <i class="fas fa-sliders-h"></i> 配置设置
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#data">
+                            <i class="fas fa-table"></i> 数据查看
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#charts">
+                            <i class="fas fa-chart-bar"></i> 数据分析
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#files">
+                            <i class="fas fa-folder"></i> 文件管理
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="mainTabContent">
+                    <!-- Crawler Tab -->
+                    <div class="tab-pane fade show active" id="crawler">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6><i class="fas fa-info-circle"></i> 运行状态</h6>
+                                    <span class="badge status-idle" id="statusBadge">空闲</span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h6><i class="fas fa-tasks"></i> 当前进度</h6>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="progressBar" style="width: 0%">0%</div>
+                                    </div>
+                                    <small class="text-muted" id="currentTask">等待开始...</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <button class="btn btn-primary btn-lg" id="startBtn" onclick="startCrawler()">
+                                        <i class="fas fa-play"></i> 开始爬取
+                                    </button>
+                                    <button class="btn btn-danger btn-lg" id="stopBtn" style="display:none" onclick="stopCrawler()">
+                                        <i class="fas fa-stop"></i> 停止爬取
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-list"></i> 运行日志</h6>
+                                <div class="alert alert-light" style="max-height: 300px; overflow-y: auto;" id="logArea">
+                                    <p class="mb-0">系统就绪，等待开始...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Config Tab -->
+                    <div class="tab-pane fade" id="config">
+                        <form class="config-form" id="configForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label>价格范围（万元）</label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <input type="number" class="form-control" id="minPrice" placeholder="最低价">
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" class="form-control" id="maxPrice" placeholder="最高价">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>爬取区域</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="district1" checked>
+                                            <label class="form-check-label" for="district1">吉阳区</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="district2" checked>
+                                            <label class="form-check-label" for="district2">天涯区</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label>最大爬取页数</label>
+                                        <input type="number" class="form-control" id="maxPages" value="50">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>启用的网站</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="site1" checked>
+                                            <label class="form-check-label" for="site1">链家网</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="site2" checked>
+                                            <label class="form-check-label" for="site2">安居客</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="site3" checked>
+                                            <label class="form-check-label" for="site3">58同城</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="site4" checked>
+                                            <label class="form-check-label" for="site4">贝壳找房</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> 保存配置
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Data Tab -->
+                    <div class="tab-pane fade" id="data">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>标题</th>
+                                        <th>区域</th>
+                                        <th>户型</th>
+                                        <th>面积</th>
+                                        <th>总价(万)</th>
+                                        <th>来源</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTable">
+                                    <tr>
+                                        <td colspan="6" class="text-center">暂无数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Charts Tab -->
+                    <div class="tab-pane fade" id="charts">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>价格分布</h6>
+                                <div class="chart-container">
+                                    <canvas id="priceChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>区域分布</h6>
+                                <div class="chart-container">
+                                    <canvas id="districtChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h6>网站来源</h6>
+                                <div class="chart-container">
+                                    <canvas id="sourceChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>面积分布</h6>
+                                <div class="chart-container">
+                                    <canvas id="areaChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Files Tab -->
+                    <div class="tab-pane fade" id="files">
+                        <div class="mb-3">
+                            <button class="btn btn-primary" onclick="refreshFiles()">
+                                <i class="fas fa-sync"></i> 刷新文件列表
+                            </button>
+                        </div>
+                        <div id="fileList">
+                            <!-- Files will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let statusInterval;
+        let priceChart, districtChart, sourceChart, areaChart;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConfig();
+            refreshFiles();
+            initCharts();
+        });
+
+        // Load configuration
+        function loadConfig() {
+            fetch('/api/config')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('minPrice').value = data.price_range.min / 10000;
+                    document.getElementById('maxPrice').value = data.price_range.max / 10000;
+                    document.getElementById('maxPages').value = data.crawl_settings.max_pages;
+                });
+        }
+
+        // Start crawler
+        function startCrawler() {
+            fetch('/api/start', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('startBtn').style.display = 'none';
+                        document.getElementById('stopBtn').style.display = 'inline-block';
+                        document.getElementById('statusBadge').className = 'badge status-running';
+                        document.getElementById('statusBadge').textContent = '运行中';
+
+                        addLog('爬虫已启动...');
+                        startStatusPolling();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+        }
+
+        // Stop crawler
+        function stopCrawler() {
+            // Implementation for stopping crawler
+            addLog('正在停止爬虫...');
+        }
+
+        // Start status polling
+        function startStatusPolling() {
+            statusInterval = setInterval(() => {
+                fetch('/api/status')
+                    .then(response => response.json())
+                    .then(data => {
+                        updateStatus(data);
+
+                        if (!data.running) {
+                            clearInterval(statusInterval);
+                            document.getElementById('startBtn').style.display = 'inline-block';
+                            document.getElementById('stopBtn').style.display = 'none';
+                            document.getElementById('statusBadge').className = 'badge status-idle';
+                            document.getElementById('statusBadge').textContent = '空闲';
+
+                            if (data.error) {
+                                addLog('错误: ' + data.error);
+                            } else {
+                                addLog('爬取完成！');
+                                loadResult();
+                            }
+                        }
+                    });
+            }, 1000);
+        }
+
+        // Update status
+        function updateStatus(data) {
+            document.getElementById('progressBar').style.width = data.progress + '%';
+            document.getElementById('progressBar').textContent = data.progress + '%';
+            document.getElementById('currentTask').textContent = data.current_task;
+            document.getElementById('totalHouses').textContent = data.total_houses;
+
+            if (data.elapsed_time) {
+                document.getElementById('elapsedTime').textContent = Math.round(data.elapsed_time) + '秒';
+            }
+        }
+
+        // Load result
+        function loadResult() {
+            fetch('/api/result')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateDataTable(data.houses);
+                        updateStatistics(data.statistics);
+                        updateCharts(data.statistics);
+                    }
+                });
+        }
+
+        // Update data table
+        function updateDataTable(houses) {
+            const tbody = document.getElementById('dataTable');
+            tbody.innerHTML = '';
+
+            houses.forEach(house => {
+                const row = `
+                    <tr>
+                        <td><a href="${house['链接']}" target="_blank">${house['标题']}</a></td>
+                        <td>${house['区域']}</td>
+                        <td>${house['户型']}</td>
+                        <td>${house['面积']}</td>
+                        <td>${house['总价(万)']}</td>
+                        <td>${house['来源']}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Update statistics
+        function updateStatistics(stats) {
+            document.getElementById('avgPrice').textContent = (stats['平均总价(万)'] || 0).toFixed(1) + '万';
+            document.getElementById('avgArea').textContent = (stats['平均面积(㎡)'] || 0).toFixed(1) + '㎡';
+        }
+
+        // Initialize charts
+        function initCharts() {
+            const ctx1 = document.getElementById('priceChart').getContext('2d');
+            priceChart = new Chart(ctx1, {
+                type: 'histogram',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '房源数量',
+                        data: [],
+                        backgroundColor: 'rgba(52, 152, 219, 0.5)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            const ctx2 = document.getElementById('districtChart').getContext('2d');
+            districtChart = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.5)',
+                            'rgba(46, 204, 113, 0.5)',
+                            'rgba(241, 196, 15, 0.5)',
+                            'rgba(231, 76, 60, 0.5)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            const ctx3 = document.getElementById('sourceChart').getContext('2d');
+            sourceChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '房源数量',
+                        data: [],
+                        backgroundColor: 'rgba(46, 204, 113, 0.5)',
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            const ctx4 = document.getElementById('areaChart').getContext('2d');
+            areaChart = new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '面积分布',
+                        data: [],
+                        borderColor: 'rgba(241, 196, 15, 1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // Update charts
+        function updateCharts(stats) {
+            if (stats['各区域房源数']) {
+                districtChart.data.labels = Object.keys(stats['各区域房源数']);
+                districtChart.data.datasets[0].data = Object.values(stats['各区域房源数']);
+                districtChart.update();
+            }
+
+            if (stats['各网站房源数']) {
+                sourceChart.data.labels = Object.keys(stats['各网站房源数']);
+                sourceChart.data.datasets[0].data = Object.values(stats['各网站房源数']);
+                sourceChart.update();
+            }
+        }
+
+        // Refresh files
+        function refreshFiles() {
+            fetch('/api/files')
+                .then(response => response.json())
+                .then(data => {
+                    const fileList = document.getElementById('fileList');
+                    fileList.innerHTML = '';
+
+                    data.files.forEach(file => {
+                        const item = `
+                            <div class="file-item">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <i class="fas fa-file"></i> ${file.name}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">${(file.size / 1024).toFixed(2)} KB</small>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">${file.modified}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        fileList.innerHTML += item;
+                    });
+                });
+        }
+
+        // Add log
+        function addLog(message) {
+            const logArea = document.getElementById('logArea');
+            const time = new Date().toLocaleTimeString();
+            logArea.innerHTML += `<p class="mb-0">[${time}] ${message}</p>`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        // Config form submit
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const config = {
+                price_range: {
+                    min: parseFloat(document.getElementById('minPrice').value) * 10000,
+                    max: parseFloat(document.getElementById('maxPrice').value) * 10000
+                },
+                max_pages: parseInt(document.getElementById('maxPages').value)
+            };
+
+            fetch('/api/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            });
+        });
+    </script>
+</body>
+</html>
